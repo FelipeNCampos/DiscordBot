@@ -14,6 +14,7 @@ from bot.models import InstagramMedia, TwitchOnlineEvent, TwitchStream
 logger = logging.getLogger(__name__)
 
 MAX_INSTAGRAM_CAPTION_LENGTH = 1_000
+TWITCH_NOTIFICATION_ROLE_ID = 1547827103611887637
 
 TWITCH_WELCOME_CHANNEL_FALLBACK = "canal de anúncios da Twitch"
 INSTAGRAM_WELCOME_CHANNEL_FALLBACK = "canal de anúncios do Instagram"
@@ -137,7 +138,10 @@ class DiscordNotificationSender:
 
         stream_title = stream.title or "Título não disponível"
 
-        content = f"@everyone\n**𑣲{broadcaster_name} está ao vivo na Twitch!**\n{stream_title}"
+        content = (
+            f"<@&{TWITCH_NOTIFICATION_ROLE_ID}>\n"
+            f"**𑣲{broadcaster_name} está ao vivo na Twitch!**\n{stream_title}"
+        )
 
         embed = discord.Embed(
             title="Live na Twitch",
@@ -155,6 +159,12 @@ class DiscordNotificationSender:
                 content,
                 embed,
                 view=view,
+                allowed_mentions=discord.AllowedMentions(
+                    everyone=False,
+                    users=False,
+                    roles=[discord.Object(id=TWITCH_NOTIFICATION_ROLE_ID)],
+                    replied_user=False,
+                ),
             )
             return
 
@@ -173,6 +183,12 @@ class DiscordNotificationSender:
             embed,
             file=file,
             view=view,
+            allowed_mentions=discord.AllowedMentions(
+                everyone=False,
+                users=False,
+                roles=[discord.Object(id=TWITCH_NOTIFICATION_ROLE_ID)],
+                replied_user=False,
+            ),
         )
 
     async def send_instagram_notification(
@@ -371,6 +387,7 @@ class DiscordNotificationSender:
         *,
         file: discord.File | None = None,
         view: discord.ui.View | None = None,
+        allowed_mentions: discord.AllowedMentions | None = None,
     ) -> None:
         """Envia conteúdo, embed, arquivo e componentes para um canal."""
         channel = self._client.get_channel(channel_id)
@@ -411,6 +428,7 @@ class DiscordNotificationSender:
                 embed=embed,
                 file=file,
                 view=view,
+                allowed_mentions=allowed_mentions,
             )
 
         except discord.Forbidden:

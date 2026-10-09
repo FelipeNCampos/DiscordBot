@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import UTC, datetime
 
+import discord
 import pytest
 
 from bot.config import Settings
@@ -12,8 +13,9 @@ from bot.integrations.discord_sender import (
     DiscordNotificationError,
     DiscordNotificationSender,
     InstagramNotificationView,
+    TWITCH_NOTIFICATION_ROLE_ID,
 )
-from bot.models import InstagramMedia
+from bot.models import InstagramMedia, TwitchOnlineEvent, TwitchStream
 
 
 class FakeChannel:
@@ -52,6 +54,41 @@ def instagram_environment(environment: Callable[[], dict[str, str]]) -> dict[str
         }
     )
     return values
+
+
+@pytest.mark.asyncio
+async def test_twitch_notification_mentions_only_configured_role(
+    environment: Callable[[], dict[str, str]],
+) -> None:
+    """A notificação da live marca o cargo da comunidade em vez de everyone."""
+    channel = FakeChannel()
+    sender = DiscordNotificationSender(  # type: ignore[arg-type]
+        FakeDiscordClient(channel), Settings.from_environment(environment())
+    )
+    sender._choose_twitch_image = lambda: None  # type: ignore[method-assign]
+    event = TwitchOnlineEvent(
+        message_id="event-1",
+        event_type="stream.online",
+        broadcaster_user_id="123",
+        broadcaster_login="canal_teste",
+        broadcaster_name="Vampirão",
+        started_at=None,
+        received_at=datetime(2026, 9, 11, 12, tzinfo=UTC),
+    )
+
+    await sender.send_twitch_notification(
+        event,
+        TwitchStream(title="Live de teste", url="https://twitch.tv/canal_teste"),
+    )
+
+    message = channel.messages[0]
+    assert message["content"].startswith(f"<@&{TWITCH_NOTIFICATION_ROLE_ID}>\n")  # type: ignore[union-attr]
+    assert "@everyone" not in message["content"]  # type: ignore[operator]
+    mentions = message["allowed_mentions"]
+    assert isinstance(mentions, discord.AllowedMentions)
+    assert mentions.everyone is False
+    assert mentions.users is False
+    assert mentions.roles == [discord.Object(id=TWITCH_NOTIFICATION_ROLE_ID)]
 
 
 @pytest.mark.asyncio
