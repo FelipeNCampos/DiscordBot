@@ -108,9 +108,9 @@
     "semantic_hash": ""
   },
   "tests/test_role_management.py": {
-    "mtime": 1792891888.2231665,
-    "seen": 1792892130.9557319,
-    "ast_hash": "408496162c7bc0426eeea74ad756a5c7",
+    "mtime": 1792907087.1174343,
+    "seen": 1792907110.0976958,
+    "ast_hash": "2d032afd6872a51f7dfac9069b41b2a9",
     "semantic_hash": ""
   },
   "tests/test_temporary_voice.py": {
@@ -162,9 +162,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1792893563.187715,
-    "seen": 1792893606.8560762,
-    "ast_hash": "13c402e0ba7fbc5eee1403bd003fe74c",
+    "mtime": 1792907087.4736648,
+    "seen": 1792907110.0976958,
+    "ast_hash": "95280bcdef4da96ff4d503e62a803f5b",
     "semantic_hash": ""
   },
   "src/bot/assets/emojis/IconLiveFundoRosa.png": {
@@ -324,15 +324,15 @@
     "semantic_hash": ""
   },
   "src/bot/application/errors.py": {
-    "mtime": 1792893146.536946,
-    "seen": 1792893606.8560762,
-    "ast_hash": "6aa267062fff0f66376b64c45ea709e3",
+    "mtime": 1792907045.4612138,
+    "seen": 1792907110.0976958,
+    "ast_hash": "d56e0a779fd3ae4f5976bc994691f334",
     "semantic_hash": ""
   },
   "src/bot/application/ports.py": {
-    "mtime": 1792891888.3604562,
-    "seen": 1792892130.9557319,
-    "ast_hash": "b7cb6315957dedfb58dca6b510a03c70",
+    "mtime": 1792907045.058429,
+    "seen": 1792907110.0976958,
+    "ast_hash": "332ae05abb8e44883d8f870b07288095",
     "semantic_hash": ""
   },
   "src/bot/application/use_cases/__init__.py": {
@@ -372,9 +372,9 @@
     "semantic_hash": ""
   },
   "src/bot/config/bootstrap.py": {
-    "mtime": 1792893282.649709,
-    "seen": 1792893606.8560762,
-    "ast_hash": "06689f1c0d0f7ae21e7b687ddd3c21ad",
+    "mtime": 1792907046.59399,
+    "seen": 1792907110.0976958,
+    "ast_hash": "10b2080010c3ff9108096414048ccf91",
     "semantic_hash": ""
   },
   "src/bot/config/logging.py": {
@@ -534,9 +534,9 @@
     "semantic_hash": ""
   },
   "src/bot/presentation/discord/client.py": {
-    "mtime": 1792893282.649709,
-    "seen": 1792893606.8560762,
-    "ast_hash": "8e8267421bc3256f819666902fa35641",
+    "mtime": 1792907046.2022092,
+    "seen": 1792907110.0976958,
+    "ast_hash": "c24e41cad399e3e19e41037d4483c259",
     "semantic_hash": ""
   },
   "src/bot/presentation/discord/cogs/__init__.py": {
@@ -570,9 +570,9 @@
     "semantic_hash": ""
   },
   "src/bot/presentation/discord/cogs/role_management.py": {
-    "mtime": 1792891888.3804924,
-    "seen": 1792892130.9557319,
-    "ast_hash": "566caeb4e4ed57e0b71a944ae7f3faef",
+    "mtime": 1792907086.7628126,
+    "seen": 1792907110.0976958,
+    "ast_hash": "39c7e401e0d6da3a852fa0b501b4c31d",
     "semantic_hash": ""
   },
   "src/bot/presentation/discord/cogs/temporary_voice.py": {
@@ -753,6 +753,12 @@
     "mtime": 1792893410.0270815,
     "seen": 1792893606.8560762,
     "ast_hash": "777e5b38cf61bef9edb795b3f265415c",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/persistence/role_menu_messages.py": {
+    "mtime": 1792907086.407109,
+    "seen": 1792907110.0976958,
+    "ast_hash": "0ce9efed508ad4870af9d5e5b2c021ff",
     "semantic_hash": ""
   }
 }

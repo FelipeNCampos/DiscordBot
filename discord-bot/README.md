@@ -280,9 +280,8 @@ cargos que ele pode atribuir**. Não coloque o bot acima de cargos administrativ
 gerenciar. No canal dos menus, conceda ao bot **View Channel**, **Read Message History**, **Add
 Reactions** e **Manage Roles**.
 
-Com o Developer Mode ativo, clique com o botão direito em um cargo, canal ou mensagem e escolha
-**Copiar ID**. Preencha inicialmente o canal e os cargos no `.env`; os IDs das mensagens podem ficar
-vazios até elas serem publicadas:
+Com o Developer Mode ativo, clique com o botão direito em um cargo ou canal e escolha
+**Copiar ID**. Preencha o canal e os cargos no `.env`; os IDs das mensagens podem ficar vazios:
 
 ```dotenv
 DISCORD_AUTO_ROLE_ID=123456789012345678
@@ -303,20 +302,28 @@ Unicode disponíveis no Discord padrão. Você pode alterar qualquer um por
 `DISCORD_ROLE_*_EMOJI`. Para emoji personalizado, informe a string completa, por exemplo
 `<:meuemoji:123456789012345678>`; o bot compara tanto a string quanto o ID do emoji.
 
-Depois de reiniciar, um administrador pode executar `/configurar-cargos`. O comando publica as
-mensagens configuradas apenas quando você o chama, adiciona as reações e responde de forma efêmera
-com os IDs criados. Copie-os para as variáveis abaixo, reinicie o bot e não execute o comando de
-novo, pois isso criaria outras mensagens:
+Depois de iniciar o bot, um administrador pode executar `/configurar-cargos`. O comando publica as
+mensagens configuradas, ativa os IDs imediatamente em memória e os salva automaticamente em
+`data/role-menu-messages.sqlite3`. As reações passam a funcionar sem editar o `.env` e sem reiniciar.
+O cache é restaurado na próxima inicialização e prevalece sobre IDs antigos do `.env` para o mesmo
+canal. Mantenha `data/` persistente e com permissão de escrita para a conta que executa o bot.
+
+Cada execução publica novas mensagens e substitui os IDs ativos das categorias publicadas. As
+mensagens anteriores deixam de atribuir cargos, mas não são apagadas automaticamente. Se a gravação
+em disco falhar, os menus continuam ativos em memória e o comando avisa que seus IDs serão perdidos
+ao reiniciar.
+
+Para usar mensagens criadas manualmente, os IDs abaixo continuam disponíveis como configuração
+inicial quando não houver ID salvo no cache para a categoria e o canal:
 
 ```dotenv
 DISCORD_AGE_ROLE_MESSAGE_ID=123456789012345678
 DISCORD_PRONOUN_ROLE_MESSAGE_ID=123456789012345678
 ```
 
-Se preferir criar as mensagens manualmente, escreva uma mensagem por categoria, adicione as reações
-configuradas e copie os IDs das mensagens para essas variáveis. Caso uma mensagem seja apagada e
-recriada, atualize somente seu ID no `.env` e reinicie. Não há persistência de configurações além do
-ambiente, por escolha: nenhum dado pessoal é armazenado.
+Escreva uma mensagem por categoria, adicione as reações configuradas e copie os IDs para essas
+variáveis antes de iniciar o bot. Se precisar recriar os menus, use `/configurar-cargos` para atualizar
+o cache automaticamente. O cache guarda apenas canal, categoria e ID da mensagem.
 
 Depois de configurados os IDs das mensagens, o próprio bot adiciona automaticamente todos os emojis
 definidos no `.env` a cada inicialização. Portanto, basta deixar as mensagens no canal: ninguém precisa

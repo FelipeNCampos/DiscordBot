@@ -71,3 +71,7 @@ class DiscordNotificationError(RuntimeError):
 
 class GrowthStorageError(RuntimeError):
     """Falha segura ao registrar ou consultar movimentações do servidor."""
+
+
+class RoleMenuCacheError(RuntimeError):
+    """Falha segura ao ler ou persistir os IDs das mensagens de cargos."""

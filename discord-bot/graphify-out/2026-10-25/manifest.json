@@ -1,0 +1,758 @@
+{
+  "pyproject.toml": {
+    "mtime": 1792892122.722348,
+    "seen": 1792892130.9557319,
+    "ast_hash": "501bbd3fcb24c119829fc599908f27a0",
+    "semantic_hash": ""
+  },
+  "scripts/generate_deployment_article.py": {
+    "mtime": 1789193058.518448,
+    "seen": 1789437614.086647,
+    "ast_hash": "9a41bf9306375afa70b38db3a6b5cfd1",
+    "semantic_hash": ""
+  },
+  "scripts/generate_deployment_article_pdf.py": {
+    "mtime": 1789193481.7211318,
+    "seen": 1789437614.086647,
+    "ast_hash": "cd3dd8117cf1e7f42737fc1340b7115f",
+    "semantic_hash": ""
+  },
+  "src/bot/__init__.py": {
+    "mtime": 1792891888.15706,
+    "seen": 1792892130.9557319,
+    "ast_hash": "fc5cce78043d989955bee0d85225ff04",
+    "semantic_hash": ""
+  },
+  "src/bot/__main__.py": {
+    "mtime": 1792891888.15706,
+    "seen": 1792892130.9557319,
+    "ast_hash": "6a406b93aea02e8ccac8bf71c4437b46",
+    "semantic_hash": ""
+  },
+  "src/bot/main.py": {
+    "mtime": 1792892122.7218423,
+    "seen": 1792892130.9557319,
+    "ast_hash": "2afa47c238fd110bd462d188a65679bd",
+    "semantic_hash": ""
+  },
+  "tests/__init__.py": {
+    "mtime": 1792891888.2341793,
+    "seen": 1792892130.9557319,
+    "ast_hash": "39d4fd45fe1bf8c84a569f6e4d6f02f7",
+    "semantic_hash": ""
+  },
+  "tests/conftest.py": {
+    "mtime": 1792891888.2026243,
+    "seen": 1792892130.9557319,
+    "ast_hash": "10685f48420ac33af67eeaa11afb2a84",
+    "semantic_hash": ""
+  },
+  "tests/test_cleanup_command.py": {
+    "mtime": 1792891888.3619695,
+    "seen": 1792892130.9557319,
+    "ast_hash": "fed4980de7b032a402b927bb15ff2f49",
+    "semantic_hash": ""
+  },
+  "tests/test_command_access.py": {
+    "mtime": 1792891888.205629,
+    "seen": 1792892130.9557319,
+    "ast_hash": "0ea7a62fee0cc3b0c7faf325c4d4f046",
+    "semantic_hash": ""
+  },
+  "tests/test_config.py": {
+    "mtime": 1792891888.2076335,
+    "seen": 1792892130.9557319,
+    "ast_hash": "ada78c4a7547f442db6181b53a0f6600",
+    "semantic_hash": ""
+  },
+  "tests/test_discord_sender.py": {
+    "mtime": 1792891888.4291036,
+    "seen": 1792892130.9557319,
+    "ast_hash": "ecbcf8ccaa7f4f21b950f5a058ff7525",
+    "semantic_hash": ""
+  },
+  "tests/test_instagram.py": {
+    "mtime": 1792891888.4185705,
+    "seen": 1792892130.9557319,
+    "ast_hash": "9b2b5294356573b9bf8575645c9be548",
+    "semantic_hash": ""
+  },
+  "tests/test_instagram_oauth.py": {
+    "mtime": 1792891888.452164,
+    "seen": 1792892130.9557319,
+    "ast_hash": "0d4be24c5bd6ac3b23975ac496f881f1",
+    "semantic_hash": ""
+  },
+  "tests/test_live_commands.py": {
+    "mtime": 1792891888.420575,
+    "seen": 1792892130.9557319,
+    "ast_hash": "1174313f48356ca7284635de5b6f781d",
+    "semantic_hash": ""
+  },
+  "tests/test_main.py": {
+    "mtime": 1792893281.6575003,
+    "seen": 1792893606.8560762,
+    "ast_hash": "532d443b2823f2981c106609b05f113b",
+    "semantic_hash": ""
+  },
+  "tests/test_media_reactions.py": {
+    "mtime": 1792891888.4476502,
+    "seen": 1792892130.9557319,
+    "ast_hash": "66a64e5b6092a1d56f4139a47730f48b",
+    "semantic_hash": ""
+  },
+  "tests/test_music.py": {
+    "mtime": 1792891888.2216525,
+    "seen": 1792892130.9557319,
+    "ast_hash": "3e3fe9744112e50c66f8e4505d97bb26",
+    "semantic_hash": ""
+  },
+  "tests/test_role_management.py": {
+    "mtime": 1792891888.2231665,
+    "seen": 1792892130.9557319,
+    "ast_hash": "408496162c7bc0426eeea74ad756a5c7",
+    "semantic_hash": ""
+  },
+  "tests/test_temporary_voice.py": {
+    "mtime": 1792891888.2261684,
+    "seen": 1792892130.9557319,
+    "ast_hash": "a5557c3de80c74cf9589f2e636fdb788",
+    "semantic_hash": ""
+  },
+  "tests/test_twitch.py": {
+    "mtime": 1792891888.227669,
+    "seen": 1792892130.9557319,
+    "ast_hash": "53283ed2191a8aaacf6f75ed7f032e43",
+    "semantic_hash": ""
+  },
+  "tests/test_twitch_auth.py": {
+    "mtime": 1792891888.4346168,
+    "seen": 1792892130.9557319,
+    "ast_hash": "d755400fcffb97905179937b1f61fa6d",
+    "semantic_hash": ""
+  },
+  "tests/test_twitch_token_validator.py": {
+    "mtime": 1792891888.2291684,
+    "seen": 1792892130.9557319,
+    "ast_hash": "da1e5e2064df2fce9a9d8511deb53d8c",
+    "semantic_hash": ""
+  },
+  "tests/test_twitch_webhook.py": {
+    "mtime": 1792891888.2301702,
+    "seen": 1792892130.9557319,
+    "ast_hash": "795ebaf47a77e27e2c3e70a0e1f8391e",
+    "semantic_hash": ""
+  },
+  "tests/test_web_app.py": {
+    "mtime": 1792891888.2306721,
+    "seen": 1792892130.9557319,
+    "ast_hash": "47a78f5eee5bdad9780690ce3f0544e9",
+    "semantic_hash": ""
+  },
+  "tests/test_welcome.py": {
+    "mtime": 1792891888.402035,
+    "seen": 1792892130.9557319,
+    "ast_hash": "601ce05dfd3bb2be4cf16af1035dbb8e",
+    "semantic_hash": ""
+  },
+  "tests/test_youtube_audio.py": {
+    "mtime": 1792891888.431607,
+    "seen": 1792892130.9557319,
+    "ast_hash": "dc9a519165aedb4e440958e6cac7651e",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792893563.187715,
+    "seen": 1792893606.8560762,
+    "ast_hash": "13c402e0ba7fbc5eee1403bd003fe74c",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/IconLiveFundoRosa.png": {
+    "mtime": 1789099477.2791586,
+    "seen": 1789437614.086647,
+    "ast_hash": "267f700fa8c8a96670473cd557727f67",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/abacax.png": {
+    "mtime": 1789099456.9721138,
+    "seen": 1789437614.087149,
+    "ast_hash": "f85d7f9f2a8b520104748a7fa4a028c7",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/ahn.png": {
+    "mtime": 1789099452.4935713,
+    "seen": 1789437614.087149,
+    "ast_hash": "3e420c82190e4b5f4220d510e074a841",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/assustado.png": {
+    "mtime": 1789099388.441143,
+    "seen": 1789437614.087149,
+    "ast_hash": "c8653872672e3c6e5626d5f1af8a27ff",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/bebendoSangue.png": {
+    "mtime": 1789099398.2195754,
+    "seen": 1789437614.087149,
+    "ast_hash": "18ac37e33953786bb7dd90666e7e8605",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/bebendoSangueComZoom.png": {
+    "mtime": 1789099411.750593,
+    "seen": 1789437614.087149,
+    "ast_hash": "4d6164bd656802c1be78c139b13256af",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/cafune.png": {
+    "mtime": 1789099430.4432888,
+    "seen": 1789437614.087149,
+    "ast_hash": "03f5fd13e5cacb7d0e2f88cf3f9c8676",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/cafuneComPesco\u00e7oGrosso.png": {
+    "mtime": 1789099440.360479,
+    "seen": 1789437614.087149,
+    "ast_hash": "054705b4c574fb955ef27389b2b49120",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/escondido.png": {
+    "mtime": 1789099426.2132127,
+    "seen": 1789437614.087149,
+    "ast_hash": "83e82aaa877b58dbdf78e67caa220582",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/espia.png": {
+    "mtime": 1789098903.4674354,
+    "seen": 1789437614.087149,
+    "ast_hash": "83e82aaa877b58dbdf78e67caa220582",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/gato.png": {
+    "mtime": 1789099461.293082,
+    "seen": 1789437614.087149,
+    "ast_hash": "a75cf09b587822c93180c58753c90d2d",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/hummmmm.png": {
+    "mtime": 1789099501.7546206,
+    "seen": 1789437614.087149,
+    "ast_hash": "6795ee76ed138adc7de620759069b554",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/iconLiveFundoBranco.png": {
+    "mtime": 1789099470.123117,
+    "seen": 1789437614.087149,
+    "ast_hash": "7dd755588eb92e0ef4c6975d0223464e",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/tubalao.png": {
+    "mtime": 1789099422.3666627,
+    "seen": 1789437614.087149,
+    "ast_hash": "12a4e7e15b1636aca14f57cf0a97a967",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/tutorialMaquiagem.png": {
+    "mtime": 1789099491.3501093,
+    "seen": 1789437614.087149,
+    "ast_hash": "d62343a43c8a469f3bffdd820bc7cfbe",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/vampCaixaoPng.png": {
+    "mtime": 1789099513.646753,
+    "seen": 1789437614.087149,
+    "ast_hash": "ad83c178f15ea161b7977fe9dcf0aba5",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/emojis/vevendoVInho.png": {
+    "mtime": 1789099417.2143712,
+    "seen": 1789437614.087149,
+    "ast_hash": "cfd92ccf39ba0c4f53cc886b5a14453c",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/reels-png/gato.png": {
+    "mtime": 1789099461.293082,
+    "seen": 1789437614.087149,
+    "ast_hash": "a75cf09b587822c93180c58753c90d2d",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/reels-png/usar.png": {
+    "mtime": 1789099461.293082,
+    "seen": 1789437614.087149,
+    "ast_hash": "a75cf09b587822c93180c58753c90d2d",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/twitch-banner-live/Fundo.png": {
+    "mtime": 1789119736.1805656,
+    "seen": 1789437614.087149,
+    "ast_hash": "e5457ac5adbfc29f803680077b3e11c7",
+    "semantic_hash": ""
+  },
+  "src/bot/assets/welcome-img/gato.png": {
+    "mtime": 1789099461.293082,
+    "seen": 1789437614.087149,
+    "ast_hash": "a75cf09b587822c93180c58753c90d2d",
+    "semantic_hash": ""
+  },
+  "tmp/pdfs/morcegao-page-1.png": {
+    "mtime": 1789193371.5806296,
+    "seen": 1789437614.087149,
+    "ast_hash": "b230cd698d3b48041d3905a361ce01ff",
+    "semantic_hash": ""
+  },
+  "tmp/pdfs/morcegao-page-2.png": {
+    "mtime": 1789193371.7242248,
+    "seen": 1789437614.087149,
+    "ast_hash": "2eadc9d6b67684e56d08e21d201cd7f2",
+    "semantic_hash": ""
+  },
+  "tests/test_member_activity_logs.py": {
+    "mtime": 1792892536.56892,
+    "seen": 1792892847.135541,
+    "ast_hash": "acad49a2affc993d330a96ba05d294bd",
+    "semantic_hash": ""
+  },
+  "tests/test_call_moderator.py": {
+    "mtime": 1792891888.2041295,
+    "seen": 1792892130.9557319,
+    "ast_hash": "3c76742f7f65fd1d720a6d4d33cdc57d",
+    "semantic_hash": ""
+  },
+  "src/bot/application/__init__.py": {
+    "mtime": 1792891888.1585605,
+    "seen": 1792892130.9557319,
+    "ast_hash": "f870f9edb3669d49eaaba384d160e22a",
+    "semantic_hash": ""
+  },
+  "src/bot/application/errors.py": {
+    "mtime": 1792893146.536946,
+    "seen": 1792893606.8560762,
+    "ast_hash": "6aa267062fff0f66376b64c45ea709e3",
+    "semantic_hash": ""
+  },
+  "src/bot/application/ports.py": {
+    "mtime": 1792891888.3604562,
+    "seen": 1792892130.9557319,
+    "ast_hash": "b7cb6315957dedfb58dca6b510a03c70",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/__init__.py": {
+    "mtime": 1792891888.1695702,
+    "seen": 1792892130.9557319,
+    "ast_hash": "e24b0d28f0a302d7a5039b92b127b698",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/current_twitch_live.py": {
+    "mtime": 1792891888.167071,
+    "seen": 1792892130.9557319,
+    "ast_hash": "80b5413d42ad232b75cb430b4065f61a",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/instagram_notifications.py": {
+    "mtime": 1792891888.4000227,
+    "seen": 1792892130.9557319,
+    "ast_hash": "0f764b8857a639dca2d4db12c916e7a3",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/instagram_token_refresh.py": {
+    "mtime": 1792891933.0666268,
+    "seen": 1792892130.9557319,
+    "ast_hash": "77654bacf98d17466e7f6568c6977ac6",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/twitch_notifications.py": {
+    "mtime": 1792891888.3820033,
+    "seen": 1792892130.9557319,
+    "ast_hash": "a70817b70b804dd7226ae32aefa28e1f",
+    "semantic_hash": ""
+  },
+  "src/bot/config/__init__.py": {
+    "mtime": 1792891888.163569,
+    "seen": 1792892130.9557319,
+    "ast_hash": "e9134d02fb76c16acb3b3a87ba37781e",
+    "semantic_hash": ""
+  },
+  "src/bot/config/bootstrap.py": {
+    "mtime": 1792893282.649709,
+    "seen": 1792893606.8560762,
+    "ast_hash": "06689f1c0d0f7ae21e7b687ddd3c21ad",
+    "semantic_hash": ""
+  },
+  "src/bot/config/logging.py": {
+    "mtime": 1792891888.1600623,
+    "seen": 1792892130.9557319,
+    "ast_hash": "fdb5e4f61e5c907c950f3b8b830b888c",
+    "semantic_hash": ""
+  },
+  "src/bot/config/settings.py": {
+    "mtime": 1792892435.0234044,
+    "seen": 1792892847.1350408,
+    "ast_hash": "816035576502c09612f033c34724adb3",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/__init__.py": {
+    "mtime": 1792891888.1660707,
+    "seen": 1792892130.9557319,
+    "ast_hash": "051c4566a5e14feb44fa185c6ebb9428",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/access.py": {
+    "mtime": 1792891888.1640692,
+    "seen": 1792892130.9557319,
+    "ast_hash": "bfec20b111ff6f2a2d394da1f7ff67df",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/media.py": {
+    "mtime": 1792891888.164569,
+    "seen": 1792892130.9557319,
+    "ast_hash": "743f19a837591cc0dc676ec3fcdd35d1",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/models.py": {
+    "mtime": 1792891888.1655705,
+    "seen": 1792892130.9557319,
+    "ast_hash": "2ae27930bfadd50f6194ed045987eec2",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/roles.py": {
+    "mtime": 1792891888.1660707,
+    "seen": 1792892130.9557319,
+    "ast_hash": "23bd442b9e65a2e5ee8b9e2608d89a14",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/__init__.py": {
+    "mtime": 1792891888.1665702,
+    "seen": 1792892130.9557319,
+    "ast_hash": "ff1d01a83cd1c641ef15997be2b867f9",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/integrations/__init__.py": {
+    "mtime": 1792891888.1795895,
+    "seen": 1792892130.9557319,
+    "ast_hash": "6d62d41fbe74f80d1a992482a7ecd007",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/integrations/instagram.py": {
+    "mtime": 1792891888.3769882,
+    "seen": 1792892130.9557319,
+    "ast_hash": "967625262f5fac70e5a9c61f372af7f8",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/integrations/instagram_oauth.py": {
+    "mtime": 1792891888.385511,
+    "seen": 1792892130.9557319,
+    "ast_hash": "db9c68f513ebc886afb7e7547d91f909",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/integrations/instagram_token_store.py": {
+    "mtime": 1792891888.1765907,
+    "seen": 1792892130.9557319,
+    "ast_hash": "4d6c0ed6559e922a39ecd80a26e9c41d",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/integrations/twitch.py": {
+    "mtime": 1792891888.3764887,
+    "seen": 1792892130.9557319,
+    "ast_hash": "a006c79c774006df6612577a4a7e59a6",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/integrations/twitch_auth.py": {
+    "mtime": 1792891888.4331124,
+    "seen": 1792892130.9557319,
+    "ast_hash": "9ec761a52111972f5fb0cdd9b5aa69c1",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/media/__init__.py": {
+    "mtime": 1792891888.1805909,
+    "seen": 1792892130.9557319,
+    "ast_hash": "401d1a61b3ed66b9b1fe0e357037ea5a",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/media/youtube_audio.py": {
+    "mtime": 1792891888.443148,
+    "seen": 1792892130.9557319,
+    "ast_hash": "beecd20db2bdb179d281f1102207b8f8",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/memory/__init__.py": {
+    "mtime": 1792891888.1805909,
+    "seen": 1792892130.9557319,
+    "ast_hash": "2f0015c4007d13323623fd520ad225dc",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/memory/current_twitch_live.py": {
+    "mtime": 1792891888.3604562,
+    "seen": 1792892130.9557319,
+    "ast_hash": "a8558bf89f62b7306b13ab4c16b78694",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/persistence/__init__.py": {
+    "mtime": 1792891888.1820982,
+    "seen": 1792892130.9557319,
+    "ast_hash": "ac4f886c2667b16b53a6cc7231ba8461",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/persistence/notifications.py": {
+    "mtime": 1792891976.112066,
+    "seen": 1792892130.9557319,
+    "ast_hash": "35a97403f781037c40414d0c9993c549",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/tasks/__init__.py": {
+    "mtime": 1792891888.1846025,
+    "seen": 1792892130.9557319,
+    "ast_hash": "eb56b58a5e673e235e61f1ec85ecd4d4",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/tasks/instagram_poller.py": {
+    "mtime": 1792891888.38651,
+    "seen": 1792892130.9557319,
+    "ast_hash": "9b8a3b9013fe8617d47fde180940d3eb",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/tasks/instagram_token_refresh.py": {
+    "mtime": 1792891888.3649654,
+    "seen": 1792892130.9557319,
+    "ast_hash": "c35133bbd3ea6194ad8668bf729c128a",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/tasks/twitch_token_validator.py": {
+    "mtime": 1792891888.1846025,
+    "seen": 1792892130.9557319,
+    "ast_hash": "e5edd4a8f8cd21795a85f3d577972a60",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/__init__.py": {
+    "mtime": 1792891888.1665702,
+    "seen": 1792892130.9557319,
+    "ast_hash": "bc6a860fdef896c93ff0e0baa73ea5ff",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/__init__.py": {
+    "mtime": 1792891888.1891031,
+    "seen": 1792892130.9557319,
+    "ast_hash": "466eafb4075b1f3e5d49ef2d1c968dd8",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/client.py": {
+    "mtime": 1792893282.649709,
+    "seen": 1792893606.8560762,
+    "ast_hash": "8e8267421bc3256f819666902fa35641",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/__init__.py": {
+    "mtime": 1792891888.202125,
+    "seen": 1792892130.9557319,
+    "ast_hash": "e39b813aa026d316af76662fc77b1850",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/general.py": {
+    "mtime": 1792892638.574893,
+    "seen": 1792892847.1350408,
+    "ast_hash": "65183b968dc304108e6f8b8654c6dc9c",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/media_reactions.py": {
+    "mtime": 1792891888.1961153,
+    "seen": 1792892130.9557319,
+    "ast_hash": "8a91ba5158ccace5e45d243114dfce01",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/member_activity_logs.py": {
+    "mtime": 1792892768.9863503,
+    "seen": 1792892847.1350408,
+    "ast_hash": "a27393e097e2fde6e3623baae5dd29a6",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/music.py": {
+    "mtime": 1792891888.1981132,
+    "seen": 1792892130.9557319,
+    "ast_hash": "2b26b254d8823584a6677c9a20ef1e4f",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/role_management.py": {
+    "mtime": 1792891888.3804924,
+    "seen": 1792892130.9557319,
+    "ast_hash": "566caeb4e4ed57e0b71a944ae7f3faef",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/temporary_voice.py": {
+    "mtime": 1792891888.202125,
+    "seen": 1792892130.9557319,
+    "ast_hash": "01c6533692fc70f071deab12d2de35ad",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/command_access.py": {
+    "mtime": 1792891888.1866026,
+    "seen": 1792892130.9557319,
+    "ast_hash": "6554ab148bd294581a6f3996b46fd702",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/command_help.py": {
+    "mtime": 1792893281.6585007,
+    "seen": 1792893606.8560762,
+    "ast_hash": "e6ab0df96349e39f6e9e1a8e38715e26",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/errors.py": {
+    "mtime": 1792891888.1871028,
+    "seen": 1792892130.9557319,
+    "ast_hash": "618bcb281e4c9588d9f7ee9013c61e49",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/notification_sender.py": {
+    "mtime": 1792891888.1886024,
+    "seen": 1792892130.9557319,
+    "ast_hash": "7d9958b6dcbeb5363a0604c8543c720a",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/http/__init__.py": {
+    "mtime": 1792891888.1921153,
+    "seen": 1792892130.9557319,
+    "ast_hash": "a396530f3136c3feba6d22b6648fc0b0",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/http/app.py": {
+    "mtime": 1792891888.3804924,
+    "seen": 1792892130.9557319,
+    "ast_hash": "a781270271fa11d65efa657215489bf7",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/http/instagram_oauth.py": {
+    "mtime": 1792891888.1906023,
+    "seen": 1792892130.9557319,
+    "ast_hash": "f75c8cffff974a8f2d6da06e7b0fb171",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/http/oauth_state.py": {
+    "mtime": 1792891888.1906023,
+    "seen": 1792892130.9557319,
+    "ast_hash": "876ef5c2ee29050f62f2e64dc4a0e31b",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/http/routes.py": {
+    "mtime": 1792891888.1921153,
+    "seen": 1792892130.9557319,
+    "ast_hash": "b411ce1d746d380d9315985e7c8ed553",
+    "semantic_hash": ""
+  },
+  "tests/test_application.py": {
+    "mtime": 1792892060.046908,
+    "seen": 1792892130.9557319,
+    "ast_hash": "42521ae3b584f32b3be284b774013bd6",
+    "semantic_hash": ""
+  },
+  "tests/test_architecture.py": {
+    "mtime": 1792891928.002542,
+    "seen": 1792892130.9557319,
+    "ast_hash": "6cb32842dc9e77646e6a388d2ebdbacb",
+    "semantic_hash": ""
+  },
+  "tests/test_discord_bootstrap.py": {
+    "mtime": 1792893563.186716,
+    "seen": 1792893606.8560762,
+    "ast_hash": "c2f551c947da150d7553b4f7540da8a3",
+    "semantic_hash": ""
+  },
+  "tests/test_notification_repository.py": {
+    "mtime": 1792892060.046908,
+    "seen": 1792892130.9557319,
+    "ast_hash": "83cfbca6a887a5e8d8c0c8cf7ebbad10",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/server_activity.py": {
+    "mtime": 1792892433.8433042,
+    "seen": 1792892847.1350408,
+    "ast_hash": "810b2c30c8a78a141cf58a9ddd298545",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/server_diagnostics.py": {
+    "mtime": 1792892729.792412,
+    "seen": 1792892847.1350408,
+    "ast_hash": "ebee6e6b428455b3d9ef6d9211b6c8e8",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/activity.py": {
+    "mtime": 1792892433.8428035,
+    "seen": 1792892847.1350408,
+    "ast_hash": "8bade5876717a35d803bdf7c8c51c877",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/diagnostics.py": {
+    "mtime": 1792892728.5594993,
+    "seen": 1792892847.1350408,
+    "ast_hash": "e667c877b47c97a19dcbb6d6e901199e",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/activity_log_sender.py": {
+    "mtime": 1792892435.1277003,
+    "seen": 1792892847.1350408,
+    "ast_hash": "acf2404e54881800f393763fa41f382d",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/server_administration.py": {
+    "mtime": 1792892482.7231815,
+    "seen": 1792892847.135541,
+    "ast_hash": "56f53404a7c33782c2fbe0846cc892e3",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/server_snapshot.py": {
+    "mtime": 1792892729.791905,
+    "seen": 1792892847.135541,
+    "ast_hash": "2ad53031e7ee4c0a3b9df62d34129eca",
+    "semantic_hash": ""
+  },
+  "tests/test_server_activity.py": {
+    "mtime": 1792892815.9342713,
+    "seen": 1792892847.135541,
+    "ast_hash": "e684f6c999cc40aff09b8c01a87f26fa",
+    "semantic_hash": ""
+  },
+  "tests/test_server_diagnostics.py": {
+    "mtime": 1792892817.2352512,
+    "seen": 1792892847.135541,
+    "ast_hash": "ef059d9ce57a332a3dc8c8950d4e24c2",
+    "semantic_hash": ""
+  },
+  "src/bot/application/use_cases/member_growth.py": {
+    "mtime": 1792893503.2583847,
+    "seen": 1792893606.8560762,
+    "ast_hash": "7180da1daf3b1bc2e9908b3475b43825",
+    "semantic_hash": ""
+  },
+  "src/bot/domain/member_growth.py": {
+    "mtime": 1792893147.821209,
+    "seen": 1792893606.8560762,
+    "ast_hash": "a069cfa191c22cc393901b252bed6b13",
+    "semantic_hash": ""
+  },
+  "src/bot/infra/persistence/member_growth.py": {
+    "mtime": 1792893147.821209,
+    "seen": 1792893606.8560762,
+    "ast_hash": "15f7b3bb75194d3bca7bcf836eaab43e",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/cogs/server_growth.py": {
+    "mtime": 1792893563.1852143,
+    "seen": 1792893606.8560762,
+    "ast_hash": "8d190f741b3b85db64555208324c18fc",
+    "semantic_hash": ""
+  },
+  "src/bot/presentation/discord/growth_report.py": {
+    "mtime": 1792893564.5355494,
+    "seen": 1792893606.8560762,
+    "ast_hash": "901ab6c31e3b17435adfee193c352a17",
+    "semantic_hash": ""
+  },
+  "tests/test_member_growth.py": {
+    "mtime": 1792893503.2593849,
+    "seen": 1792893606.8560762,
+    "ast_hash": "a3aa83944eca1a9ca6fd9f1f12d2ed5f",
+    "semantic_hash": ""
+  },
+  "tests/test_member_growth_discord.py": {
+    "mtime": 1792893410.0270815,
+    "seen": 1792893606.8560762,
+    "ast_hash": "777e5b38cf61bef9edb795b3f265415c",
+    "semantic_hash": ""
+  }
+}

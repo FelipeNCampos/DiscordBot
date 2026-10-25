@@ -15,6 +15,12 @@ from bot.domain.models import (
 )
 
 
+class RoleMenuMessageCache(Protocol):
+    def get_message_id(self, channel_id: int, category: str) -> int | None: ...
+
+    async def set_message_id(self, channel_id: int, category: str, message_id: int) -> None: ...
+
+
 class InstagramMediaClient(Protocol):
     async def list_recent_media(self) -> list[InstagramMedia]: ...
 

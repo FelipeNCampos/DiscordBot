@@ -10,7 +10,12 @@ import discord
 import uvicorn
 from dotenv import load_dotenv
 
-from bot.application.errors import GrowthStorageError, InstagramTokenStoreError, TwitchError
+from bot.application.errors import (
+    GrowthStorageError,
+    InstagramTokenStoreError,
+    RoleMenuCacheError,
+    TwitchError,
+)
 from bot.application.ports import BackgroundTask, InstagramTokenStore
 from bot.config.logging import configure_logging
 from bot.config.settings import ConfigurationError, Settings
@@ -22,6 +27,7 @@ from bot.infra.media.youtube_audio import YouTubeAudioService
 from bot.infra.memory.current_twitch_live import CurrentTwitchLiveStore
 from bot.infra.persistence.member_growth import MemberGrowthStore
 from bot.infra.persistence.notifications import NotificationStore
+from bot.infra.persistence.role_menu_messages import RoleMenuMessageStore
 from bot.infra.tasks.instagram_poller import InstagramPoller
 from bot.infra.tasks.instagram_token_refresh import InstagramTokenRefreshTask
 from bot.infra.tasks.twitch_token_validator import TwitchTokenValidator
@@ -134,6 +140,11 @@ async def run_services(settings: Settings) -> None:
     )
 
     growth_store = MemberGrowthStore(Path("data") / "member-growth.sqlite3")
+    role_menu_messages = RoleMenuMessageStore(Path("data") / "role-menu-messages.sqlite3")
+    try:
+        await role_menu_messages.initialize()
+    except RoleMenuCacheError:
+        logger.exception("O cache de cargos não iniciou; serão usados os IDs do ambiente.")
     try:
         await growth_store.initialize()
     except GrowthStorageError:
@@ -148,6 +159,7 @@ async def run_services(settings: Settings) -> None:
         current_twitch_live=CurrentTwitchLiveStore(),
         audio_service=YouTubeAudioService(cookies_file=settings.youtube_cookies_file),
         growth_repository=growth_store,
+        role_menu_messages=role_menu_messages,
     )
     _configure_background_tasks(
         bot, settings, store, twitch_client, instagram_client, instagram_token_store

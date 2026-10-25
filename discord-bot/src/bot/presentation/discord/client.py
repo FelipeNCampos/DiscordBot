@@ -15,6 +15,7 @@ from bot.application.ports import (
     CurrentTwitchLiveRepository,
     InstagramGateway,
     NotificationRepository,
+    RoleMenuMessageCache,
     TwitchGateway,
 )
 from bot.application.use_cases.member_growth import GrowthRepository
@@ -41,6 +42,7 @@ class DiscordBot(commands.Bot):
         current_twitch_live: CurrentTwitchLiveRepository,
         audio_service: AudioSource,
         growth_repository: GrowthRepository,
+        role_menu_messages: RoleMenuMessageCache | None = None,
     ) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
@@ -68,6 +70,7 @@ class DiscordBot(commands.Bot):
         self._current_twitch_live = current_twitch_live
         self.audio_service = audio_service
         self.growth_repository = growth_repository
+        self.role_menu_messages = role_menu_messages
         self._twitch_notification_queue: asyncio.Queue[TwitchOnlineEvent] = asyncio.Queue()
         self._twitch_worker_task: asyncio.Task[None] | None = None
         self._startup_tasks: tuple[BackgroundTask, ...] = ()

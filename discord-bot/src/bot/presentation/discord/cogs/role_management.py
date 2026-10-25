@@ -9,6 +9,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from bot.application.errors import RoleMenuCacheError
+from bot.application.ports import RoleMenuMessageCache
 from bot.config.settings import Settings
 from bot.domain.roles import RoleCategorySettings
 from bot.presentation.discord.client import DiscordBot
@@ -24,9 +26,26 @@ CATEGORY_TITLES = {
 class RoleManagement(commands.Cog):
     """Processa somente cargos e reações previamente mapeados na configuração."""
 
-    def __init__(self, bot: DiscordBot, settings: Settings) -> None:
+    def __init__(
+        self,
+        bot: DiscordBot,
+        settings: Settings,
+        *,
+        message_cache: RoleMenuMessageCache | None = None,
+    ) -> None:
         self._bot = bot
         self._settings = settings
+        self._message_cache = message_cache
+        menu = settings.role_menu
+        self._message_ids = {
+            category.name: (
+                message_cache.get_message_id(menu.channel_id, category.name)
+                if message_cache is not None and menu.channel_id is not None
+                else None
+            )
+            or category.message_id
+            for category in menu.categories
+        }
         self._configuration_validated = False
 
     @commands.Cog.listener()
@@ -91,7 +110,12 @@ class RoleManagement(commands.Cog):
             return
 
         category = next(
-            (item for item in menu.categories if item.message_id == payload.message_id), None
+            (
+                item
+                for item in menu.categories
+                if self._message_ids[item.name] == payload.message_id
+            ),
+            None,
         )
         if category is None:
             return
@@ -150,7 +174,7 @@ class RoleManagement(commands.Cog):
     )
     @app_commands.checks.has_permissions(manage_guild=True)
     async def configure_roles(self, interaction: discord.Interaction) -> None:
-        """Publica os menus uma única vez e devolve IDs para o administrador configurar."""
+        """Publica e ativa os menus imediatamente, persistindo seus IDs no cache."""
         channel_id = self._settings.role_menu.channel_id
         if channel_id is None:
             await interaction.response.send_message(
@@ -182,35 +206,53 @@ class RoleManagement(commands.Cog):
             )
             return
 
+        await interaction.response.defer(ephemeral=True)
         created: list[str] = []
+        persistence_failed = False
         try:
             for category in self._settings.role_menu.categories:
                 if not category.options:
                     continue
                 message = await channel.send(self._menu_text(category))
+                self._message_ids[category.name] = message.id
+                created.append(f"{CATEGORY_TITLES[category.name]}: {message.id}")
+                if self._message_cache is not None:
+                    try:
+                        await self._message_cache.set_message_id(
+                            channel_id, category.name, message.id
+                        )
+                    except RoleMenuCacheError:
+                        persistence_failed = True
+                        logger.exception(
+                            "Menu de cargos ativo, mas seu ID não pôde ser persistido."
+                        )
                 for option in category.options:
                     await message.add_reaction(option.emoji)
-                created.append(f"{category.name}: {message.id}")
         except discord.Forbidden:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "Não tenho permissão para enviar mensagens ou reações nesse canal.", ephemeral=True
             )
             return
         except discord.HTTPException:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "Não consegui publicar completamente os menus de cargos.", ephemeral=True
             )
             return
 
         if not created:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "Configure pelo menos um cargo por categoria antes de publicar os menus.",
                 ephemeral=True,
             )
             return
-        await interaction.response.send_message(
-            "Menus publicados. Copie estes IDs para o .env e reinicie o bot:\n"
-            + "\n".join(created),
+        notice = "Menus publicados e ativos, sem reiniciar o bot.\n"
+        if persistence_failed:
+            notice += (
+                "Não consegui salvar os IDs em disco; eles serão perdidos ao reiniciar. "
+                "Verifique a permissão de escrita em data/.\n"
+            )
+        await interaction.followup.send(
+            notice + "\n".join(created),
             ephemeral=True,
         )
 
@@ -291,12 +333,16 @@ class RoleManagement(commands.Cog):
     async def _validate_configuration(self) -> None:
         """Registra falhas de configuração sem parar o processo principal."""
         menu = self._settings.role_menu
-        if menu.auto_role_id is None and not menu.has_reaction_menu:
+        has_menu = menu.channel_id is not None and any(
+            self._message_ids[category.name] is not None and category.options
+            for category in menu.categories
+        )
+        if menu.auto_role_id is None and not has_menu:
             logger.info("Sistema de cargos automáticos e por reação está desativado.")
             return
         if menu.auto_role_id is not None:
             logger.info("Cargo automático configurado com ID %s.", menu.auto_role_id)
-        if menu.has_reaction_menu:
+        if has_menu:
             logger.info("Sistema de cargos por reação está ativo no canal %s.", menu.channel_id)
         elif menu.channel_id is not None:
             logger.info(
@@ -306,7 +352,7 @@ class RoleManagement(commands.Cog):
     async def _add_configured_reactions(self) -> None:
         """Garante que os emojis configurados estejam nas mensagens de menu existentes."""
         menu = self._settings.role_menu
-        if not menu.has_reaction_menu or menu.channel_id is None:
+        if menu.channel_id is None:
             return
 
         channel = self._bot.get_channel(menu.channel_id)
@@ -329,32 +375,33 @@ class RoleManagement(commands.Cog):
             return
 
         for category in menu.categories:
-            if category.message_id is None or not category.options:
+            message_id = self._message_ids[category.name]
+            if message_id is None or not category.options:
                 continue
             try:
-                message = await channel.fetch_message(category.message_id)
+                message = await channel.fetch_message(message_id)
                 for option in category.options:
                     await message.add_reaction(option.emoji)
             except discord.NotFound:
                 logger.error(
-                    "Mensagem de cargos %s (%s) não encontrada.", category.name, category.message_id
+                    "Mensagem de cargos %s (%s) não encontrada.", category.name, message_id
                 )
             except discord.Forbidden:
                 logger.warning(
                     "Sem permissão para adicionar reações à mensagem de cargos %s.",
-                    category.message_id,
+                    message_id,
                 )
             except discord.HTTPException as error:
                 logger.warning(
                     "Falha ao adicionar reações à mensagem de cargos %s: status=%s.",
-                    category.message_id,
+                    message_id,
                     error.status,
                 )
             else:
                 logger.info(
                     "Emojis configurados adicionados à mensagem de cargos %s (%s).",
                     category.name,
-                    category.message_id,
+                    message_id,
                 )
 
     def _menu_text(self, category: RoleCategorySettings) -> str:
@@ -372,4 +419,8 @@ class RoleManagement(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Registra o cog de cargos no único cliente Discord existente."""
     discord_bot = cast(DiscordBot, bot)
-    await bot.add_cog(RoleManagement(discord_bot, discord_bot.settings))
+    await bot.add_cog(
+        RoleManagement(
+            discord_bot, discord_bot.settings, message_cache=discord_bot.role_menu_messages
+        )
+    )

@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import replace
+from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 import discord
 import pytest
 
 from bot.config.settings import Settings
+from bot.infra.persistence.role_menu_messages import RoleMenuMessageStore
 from bot.presentation.discord.cogs.role_management import RoleManagement
 
 
@@ -81,7 +85,8 @@ class FakeGuild:
 class FakeMessage:
     """Mensagem que registra remoções individuais de reação."""
 
-    def __init__(self) -> None:
+    def __init__(self, message_id: int = 30) -> None:
+        self.id = message_id
         self.removed: list[tuple[object, FakeMember]] = []
         self.added: list[str] = []
 
@@ -103,6 +108,23 @@ class FakeChannel:
         if self.fetch_error is not None:
             raise self.fetch_error
         return self.message
+
+
+class PublishingChannel:
+    """Canal que cria mensagens distintas para testar a publicação dos menus."""
+
+    def __init__(self) -> None:
+        self._next_message_id = 100
+        self.messages: list[FakeMessage] = []
+
+    async def send(self, content: str) -> FakeMessage:
+        message = FakeMessage(self._next_message_id)
+        self._next_message_id += 1
+        self.messages.append(message)
+        return message
+
+    async def fetch_message(self, message_id: int) -> FakeMessage:
+        return next(message for message in self.messages if message.id == message_id)
 
 
 class FakeBot:
@@ -194,6 +216,119 @@ async def test_member_join_assigns_auto_role(environment: Callable[[], dict[str,
     await cog.on_member_join(member)  # type: ignore[arg-type]
 
     assert [role.id for role in member.roles] == [10]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("legacy_ids", [True, False])
+async def test_configure_roles_persists_published_message_ids(
+    environment: Callable[[], dict[str, str]], tmp_path: Path, legacy_ids: bool
+) -> None:
+    """Novos menus funcionam imediatamente e após recriar o bot, sem editar o .env."""
+    environment_file = tmp_path / ".env"
+    environment_file.write_text("DISCORD_TOKEN=test-discord-token\n", encoding="utf-8")
+    cache_path = tmp_path / "role-menus.sqlite3"
+    cache = RoleMenuMessageStore(cache_path)
+    await cache.initialize()
+    roles = [FakeRole(role_id, position=role_id) for role_id in range(10, 20)]
+    guild = FakeGuild(roles)
+    channel = PublishingChannel()
+    bot = FakeBot(guild, channel)  # type: ignore[arg-type]
+    settings = role_settings(environment)
+    if not legacy_ids:
+        settings = replace(
+            settings,
+            role_menu=replace(
+                settings.role_menu,
+                categories=tuple(
+                    replace(category, message_id=None) for category in settings.role_menu.categories
+                ),
+            ),
+        )
+    cog = RoleManagement(bot, settings, message_cache=cache)  # type: ignore[arg-type]
+    interaction = SimpleNamespace(
+        response=SimpleNamespace(send_message=AsyncMock(), defer=AsyncMock()),
+        followup=SimpleNamespace(send=AsyncMock()),
+    )
+
+    await RoleManagement.configure_roles.callback(cog, interaction)  # type: ignore[arg-type]
+
+    assert environment_file.read_text(encoding="utf-8") == "DISCORD_TOKEN=test-discord-token\n"
+    member = FakeMember(60, guild)
+    guild._members[member.id] = member
+    await cog.on_raw_reaction_add(raw_payload(100, "🔞"))  # type: ignore[arg-type]
+    await cog.on_raw_reaction_add(raw_payload(101, "🌙"))  # type: ignore[arg-type]
+    assert {role.id for role in member.roles} == {11, 15}
+    await cog.on_raw_reaction_add(raw_payload(30, "🔞"))  # type: ignore[arg-type]
+    assert {role.id for role in member.roles} == {11, 15}  # ID antigo não é mais usado.
+
+    restored = RoleMenuMessageStore(cache_path)
+    await restored.initialize()
+    restarted = RoleManagement(bot, settings, message_cache=restored)  # type: ignore[arg-type]
+    await restarted.on_ready()
+    await restarted.on_raw_reaction_add(raw_payload(101, "🌙"))  # type: ignore[arg-type]
+    assert {role.id for role in member.roles} == {11}
+    assert "sem reiniciar" in interaction.followup.send.await_args.args[0]
+
+
+@pytest.mark.asyncio
+async def test_message_cache_is_scoped_to_channel(tmp_path: Path) -> None:
+    cache = RoleMenuMessageStore(tmp_path / "menus.sqlite3")
+    await cache.initialize()
+    await cache.set_message_id(20, "age", 100)
+    await cache.set_message_id(21, "age", 200)
+    assert cache.get_message_id(20, "age") == 100
+    assert cache.get_message_id(21, "age") == 200
+    assert cache.get_message_id(22, "age") is None
+
+
+@pytest.mark.asyncio
+async def test_configure_roles_activates_partial_publication(
+    environment: Callable[[], dict[str, str]], tmp_path: Path
+) -> None:
+    """O primeiro menu já funciona se a segunda mensagem falhar no Discord."""
+    cache = RoleMenuMessageStore(tmp_path / "menus.sqlite3")
+    await cache.initialize()
+    cog, guild, channel = role_cog(environment)
+    cog = RoleManagement(cog._bot, cog._settings, message_cache=cache)
+    first = FakeMessage(100)
+    channel.send = AsyncMock(side_effect=[first, discord_error(discord.Forbidden, 403)])
+    interaction = SimpleNamespace(
+        response=SimpleNamespace(send_message=AsyncMock(), defer=AsyncMock()),
+        followup=SimpleNamespace(send=AsyncMock()),
+    )
+    await RoleManagement.configure_roles.callback(cog, interaction)  # type: ignore[arg-type]
+    member = FakeMember(60, guild)
+    guild._members[60] = member
+    await cog.on_raw_reaction_add(raw_payload(100, "🔞"))  # type: ignore[arg-type]
+    assert [role.id for role in member.roles] == [11]
+    assert cache.get_message_id(20, "age") == 100
+    assert cache.get_message_id(20, "pronouns") is None
+
+
+@pytest.mark.asyncio
+async def test_cache_write_failure_keeps_menus_active_and_reports_missing_persistence(
+    environment: Callable[[], dict[str, str]], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache = RoleMenuMessageStore(tmp_path / "menus.sqlite3")
+    await cache.initialize()
+
+    def fail_save(*_: object) -> None:
+        raise PermissionError("Simula disco sem permissão")
+
+    monkeypatch.setattr(cache, "_save", fail_save)
+    cog, guild, channel = role_cog(environment)
+    cog = RoleManagement(cog._bot, cog._settings, message_cache=cache)
+    channel.send = AsyncMock(side_effect=[FakeMessage(100), FakeMessage(101)])
+    interaction = SimpleNamespace(
+        response=SimpleNamespace(send_message=AsyncMock(), defer=AsyncMock()),
+        followup=SimpleNamespace(send=AsyncMock()),
+    )
+    await RoleManagement.configure_roles.callback(cog, interaction)  # type: ignore[arg-type]
+    member = FakeMember(60, guild)
+    guild._members[60] = member
+    await cog.on_raw_reaction_add(raw_payload(100, "🔞"))  # type: ignore[arg-type]
+    assert [role.id for role in member.roles] == [11]
+    assert "serão perdidos ao reiniciar" in interaction.followup.send.await_args.args[0]
 
 
 @pytest.mark.asyncio
