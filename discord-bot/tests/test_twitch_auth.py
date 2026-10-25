@@ -8,11 +8,9 @@ from datetime import UTC, datetime, timedelta
 import httpx
 import pytest
 
-from bot.config import Settings
-from bot.integrations.twitch_auth import (
-    TwitchAuthClient,
-    TwitchInvalidClientError,
-)
+from bot.application.errors import TwitchInvalidClientError
+from bot.config.settings import Settings
+from bot.infra.integrations.twitch_auth import TwitchAuthClient
 
 
 @pytest.mark.asyncio

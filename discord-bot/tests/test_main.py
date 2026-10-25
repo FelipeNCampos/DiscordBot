@@ -7,8 +7,8 @@ from collections.abc import Callable
 
 import pytest
 
-import bot.main as main_module
-from bot.config import Settings
+import bot.config.bootstrap as main_module
+from bot.config.settings import Settings
 
 
 class FakeStore:
@@ -33,6 +33,9 @@ class FakeBot:
         self.closed = False
         self.started = False
         FakeBot.instances.append(self)
+
+    def configure_background_tasks(self, **_: object) -> None:
+        pass
 
     async def start(self, _: str) -> None:
         self.started = True
@@ -72,6 +75,7 @@ async def test_run_services_composes_single_bot_and_cleans_up_tasks(
         return None
 
     monkeypatch.setattr(main_module, "NotificationStore", FakeStore)
+    monkeypatch.setattr(main_module, "MemberGrowthStore", FakeStore)
     monkeypatch.setattr(main_module, "DiscordBot", FakeBot)
     monkeypatch.setattr(main_module.uvicorn, "Server", FakeServer)
     monkeypatch.setattr(main_module, "create_web_app", lambda *_, **__: object())
@@ -84,7 +88,7 @@ async def test_run_services_composes_single_bot_and_cleans_up_tasks(
 
     await main_module.run_services(Settings.from_environment(environment()))
 
-    assert len(FakeStore.instances) == 1
+    assert len(FakeStore.instances) == 2
     assert len(FakeBot.instances) == 1
     assert len(FakeServer.instances) == 1
     assert FakeBot.instances[0].closed is True

@@ -9,14 +9,14 @@ import discord
 import pytest
 from discord.ext import commands
 
-from bot.client import DiscordBot
-from bot.cogs.media_reactions import (
+from bot.config.settings import Settings
+from bot.presentation.discord.client import DiscordBot
+from bot.presentation.discord.cogs.media_reactions import (
     PROCESSED_MESSAGE_CACHE_LIMIT,
     VAMPI_REACTIONS,
     MediaReactions,
     _message_contains_media,
 )
-from bot.config import Settings
 
 
 def discord_error(error_type: type[discord.HTTPException], status: int) -> discord.HTTPException:

@@ -8,8 +8,8 @@ from types import SimpleNamespace
 import discord
 import pytest
 
-from bot.cogs.role_management import RoleManagement
-from bot.config import Settings
+from bot.config.settings import Settings
+from bot.presentation.discord.cogs.role_management import RoleManagement
 
 
 def discord_error(error_type: type[discord.HTTPException], status: int) -> discord.HTTPException:

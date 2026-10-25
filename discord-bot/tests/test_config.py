@@ -6,7 +6,7 @@ from collections.abc import Callable
 
 import pytest
 
-from bot.config import ConfigurationError, Settings
+from bot.config.settings import ConfigurationError, Settings
 
 
 def test_token_is_required(environment: Callable[[], dict[str, str]]) -> None:

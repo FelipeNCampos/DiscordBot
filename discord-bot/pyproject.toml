@@ -30,18 +30,23 @@ aws = [
 ]
 
 [project.scripts]
-discord-bot = "bot.main:main"
+discord-bot = "bot.config.bootstrap:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+namespaces = false
+
+[tool.setuptools.package-data]
+bot = ["assets/**/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-addopts = "-ra --basetemp=.pytest-tmp"
+addopts = "-ra"
+cache_dir = ".cache/pytest"
 asyncio_mode = "auto"
 
 [tool.ruff]

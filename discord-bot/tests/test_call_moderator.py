@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import discord
 
-from bot.cogs.general import CALL_NOT_CONFIGURED_MESSAGE, General
+from bot.presentation.discord.cogs.general import CALL_NOT_CONFIGURED_MESSAGE, General
 
 
 class FakeResponse:

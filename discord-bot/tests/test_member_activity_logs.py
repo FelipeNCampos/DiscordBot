@@ -7,14 +7,15 @@ from types import SimpleNamespace
 
 import discord
 
-from bot.cogs.member_activity_logs import MemberActivityLogs
-from bot.config import Settings
+from bot.config.settings import Settings
+from bot.presentation.discord.cogs.member_activity_logs import MemberActivityLogs
 
 
 class FakeChannel:
     """Canal mínimo que registra as mensagens enviadas pelo cog."""
 
     def __init__(self) -> None:
+        self.guild = SimpleNamespace(id=1)
         self.messages: list[tuple[str, discord.AllowedMentions]] = []
 
     async def send(self, content: str, *, allowed_mentions: discord.AllowedMentions) -> None:
@@ -48,7 +49,7 @@ def _settings(channel_id: int | None) -> Settings:
 def test_member_join_log_uses_configured_channel() -> None:
     channel = FakeChannel()
     cog = MemberActivityLogs(FakeBot(channel), _settings(123))  # type: ignore[arg-type]
-    member = SimpleNamespace(id=456, mention="<@456>")
+    member = SimpleNamespace(id=456, mention="<@456>", guild=SimpleNamespace(id=1))
 
     asyncio.run(cog.on_member_join(member))  # type: ignore[arg-type]
 
@@ -61,7 +62,7 @@ def test_member_remove_log_fetches_channel_when_cache_is_empty() -> None:
     bot = FakeBot(channel)
     bot.get_channel = lambda channel_id: None  # type: ignore[method-assign]
     cog = MemberActivityLogs(bot, _settings(123))  # type: ignore[arg-type]
-    member = SimpleNamespace(id=456, mention="<@456>")
+    member = SimpleNamespace(id=456, mention="<@456>", guild=SimpleNamespace(id=1))
 
     asyncio.run(cog.on_member_remove(member))  # type: ignore[arg-type]
 
@@ -72,7 +73,7 @@ def test_member_remove_log_fetches_channel_when_cache_is_empty() -> None:
 def test_member_logs_are_disabled_without_a_channel() -> None:
     channel = FakeChannel()
     cog = MemberActivityLogs(FakeBot(channel), _settings(None))  # type: ignore[arg-type]
-    member = SimpleNamespace(id=456, mention="<@456>")
+    member = SimpleNamespace(id=456, mention="<@456>", guild=SimpleNamespace(id=1))
 
     asyncio.run(cog.on_member_join(member))  # type: ignore[arg-type]
 

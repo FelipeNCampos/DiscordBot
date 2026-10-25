@@ -7,8 +7,8 @@ from collections.abc import Callable
 
 import pytest
 
-from bot.config import Settings
-from bot.tasks.twitch_token_validator import TwitchTokenValidator
+from bot.config.settings import Settings
+from bot.infra.tasks.twitch_token_validator import TwitchTokenValidator
 
 
 class FakeTwitchClient:

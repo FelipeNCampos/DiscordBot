@@ -13,10 +13,10 @@ import httpx
 import pytest
 from fastapi import FastAPI
 
-from bot.config import Settings
-from bot.models import TwitchOnlineEvent
-from bot.storage import NotificationStore
-from bot.web.routes import create_twitch_router, verify_twitch_signature
+from bot.config.settings import Settings
+from bot.domain.models import TwitchOnlineEvent
+from bot.infra.persistence.notifications import NotificationStore
+from bot.presentation.http.routes import create_twitch_router, verify_twitch_signature
 
 
 class FakeBot:

@@ -8,14 +8,14 @@ from datetime import UTC, datetime
 import discord
 import pytest
 
-from bot.config import Settings
-from bot.integrations.discord_sender import (
-    DiscordNotificationError,
+from bot.application.errors import DiscordNotificationError
+from bot.config.settings import Settings
+from bot.domain.models import InstagramMedia, TwitchOnlineEvent, TwitchStream
+from bot.presentation.discord.notification_sender import (
+    TWITCH_NOTIFICATION_ROLE_ID,
     DiscordNotificationSender,
     InstagramNotificationView,
-    TWITCH_NOTIFICATION_ROLE_ID,
 )
-from bot.models import InstagramMedia, TwitchOnlineEvent, TwitchStream
 
 
 class FakeChannel:

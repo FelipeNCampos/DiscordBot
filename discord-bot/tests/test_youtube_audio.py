@@ -6,13 +6,9 @@ import threading
 
 import pytest
 
-from bot.integrations.youtube_audio import (
-    YTDL_OPTIONS,
-    YouTubeAudioError,
-    YouTubeAudioService,
-    is_valid_youtube_url,
-    normalize_youtube_video_url,
-)
+from bot.application.errors import YouTubeAudioError
+from bot.domain.media import is_valid_youtube_url, normalize_youtube_video_url
+from bot.infra.media.youtube_audio import YTDL_OPTIONS, YouTubeAudioService
 
 
 class FakeExtractor:
@@ -52,6 +48,9 @@ class FakeExtractor:
         ("https://example.test/watch?v=abc", False),
         ("file:///tmp/audio.mp3", False),
         ("http://localhost/video", False),
+        ("https://www.youtube.com:invalid/watch?v=abc", False),
+        ("https://www.youtube.com:99999/watch?v=abc", False),
+        ("https://[broken/watch?v=abc", False),
         ("", False),
     ],
 )

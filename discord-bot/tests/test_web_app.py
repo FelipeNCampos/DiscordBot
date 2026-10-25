@@ -7,8 +7,8 @@ from collections.abc import Callable
 import httpx
 import pytest
 
-from bot.config import Settings
-from bot.web.app import create_web_app
+from bot.config.settings import Settings
+from bot.presentation.http.app import create_web_app
 
 
 class FakeBot:

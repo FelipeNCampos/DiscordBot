@@ -28,6 +28,7 @@ data/instagram*
 logs/
 
 # Ferramentas e testes
+.cache/
 .pytest_cache/
 .pytest-tmp/
 .ruff_cache/

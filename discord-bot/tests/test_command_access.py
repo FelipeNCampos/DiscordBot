@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from types import SimpleNamespace
 
-from bot.command_access import COMMAND_REQUIRED_ROLE_MESSAGE, CommandAccessTree
+from bot.presentation.discord.command_access import COMMAND_REQUIRED_ROLE_MESSAGE, CommandAccessTree
 
 
 class FakeResponse:

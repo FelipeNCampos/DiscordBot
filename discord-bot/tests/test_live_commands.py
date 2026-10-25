@@ -8,7 +8,10 @@ from types import SimpleNamespace
 import discord
 import pytest
 
-from bot.cogs.general import (
+from bot.application.errors import DiscordNotificationError, InstagramAPIError, TwitchApiError
+from bot.domain.models import InstagramMedia, TwitchOnlineEvent, TwitchStream
+from bot.infra.memory.current_twitch_live import CurrentTwitchLiveStore
+from bot.presentation.discord.cogs.general import (
     INSTAGRAM_NOT_CONFIGURED_MESSAGE,
     INSTAGRAM_RESEND_ERROR_MESSAGE,
     MISSING_MANAGE_GUILD_PERMISSION_MESSAGE,
@@ -16,11 +19,6 @@ from bot.cogs.general import (
     TWITCH_RESEND_ERROR_MESSAGE,
     General,
 )
-from bot.current_twitch_live import CurrentTwitchLiveStore
-from bot.integrations.discord_sender import DiscordNotificationError
-from bot.integrations.instagram import InstagramAPIError
-from bot.integrations.twitch_auth import TwitchApiError
-from bot.models import InstagramMedia, TwitchOnlineEvent, TwitchStream
 
 
 class FakeNotificationSender:
@@ -384,6 +382,8 @@ async def test_commands_list_contains_all_and_only_registered_commands() -> None
     assert {f"/{name}" for name in registered_names} <= field_names
     assert {
         "/comandos",
+        "/chamar",
+        "/id_usuario",
         "/reenviar_live",
         "/reenviar_reel",
         "/reenviar_post",
@@ -426,6 +426,8 @@ def test_general_cog_does_not_register_duplicate_slash_commands() -> None:
     assert len(command_names) == len(set(command_names))
     assert set(command_names) == {
         "ping",
+        "chamar",
+        "id_usuario",
         "boasvindas",
         "reenviar_live",
         "reenviar_reel",

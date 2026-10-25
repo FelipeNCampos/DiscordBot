@@ -16,6 +16,9 @@ O bot centraliza ações de moderação, interações com membros, notificação
 - Sistema de cargos automáticos e reações em mensagens
 - Canais de voz temporários
 - Logs de entrada/saída de membros
+- Diagnóstico administrativo de canais, permissões, cargos e conexão Discord
+- Registros configuráveis de atividade de membros, moderação, canais, cargos e mensagens
+- Análise de crescimento com entradas, saídas, saldo, filtros de tempo e CSV diário
 - Integração com FastAPI para endpoints de webhook e saúde local
 - Persistência com SQLite para tokens e dados do sistema
 
@@ -38,6 +41,17 @@ morcegao/
 A implementação principal do bot está em [discord-bot/README.md](discord-bot/README.md) e em seu código-fonte em [discord-bot/src](discord-bot/src).
 
 ## Arquitetura resumida
+
+- `domain`: modelos e políticas de acesso, mídias e cargos, sem dependências de frameworks.
+- `application`: casos de uso e contratos para notificações, lives e renovação de tokens.
+- `infra`: clientes de APIs, SQLite, estado em memória, extração de áudio e tarefas periódicas.
+- `config`: configuração do ambiente, logging e composição dos serviços em `bootstrap.py`.
+- `presentation`: cliente e cogs Discord, notificações, endpoints FastAPI e OAuth.
+
+Os casos de uso dependem de contratos próprios. As implementações de infraestrutura
+e apresentação são conectadas no bootstrap, preservando a execução com `python -m bot`.
+
+Os serviços continuam no mesmo processo:
 
 - Cliente Discord: responsável pelos comandos, eventos, reações e cargos automáticos
 - Twitch: EventSub e validação/refresh de tokens para detectar lives e publicar eventos

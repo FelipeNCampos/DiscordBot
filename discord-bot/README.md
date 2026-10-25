@@ -6,6 +6,44 @@ o Discord quando o perfil Twitch configurado entra ao vivo e consulta novas míd
 Instagram profissional autorizada usando somente a API oficial da Meta. Não usa scraping,
 Selenium, Playwright, navegador automatizado ou APIs não oficiais.
 
+## Organização do código
+
+O pacote `src/bot` separa cinco responsabilidades:
+
+```text
+bot/
+├── domain/          # Modelos e políticas de acesso, mídia e cargos
+├── application/     # Casos de uso, erros seguros e contratos das dependências
+│   └── use_cases/   # Notificações, consulta de lives e renovação de tokens
+├── infra/           # APIs externas, SQLite, memória, áudio e agendamento
+│   ├── integrations/
+│   ├── persistence/
+│   ├── memory/
+│   ├── media/
+│   └── tasks/
+├── config/          # Ambiente, logging e composição em bootstrap.py
+└── presentation/    # Entradas e saídas para Discord e HTTP
+    ├── discord/     # Cliente, cogs, respostas e notificações
+    └── http/        # FastAPI, webhook Twitch e endpoints OAuth
+```
+
+`domain` não depende das demais camadas. `application` depende do domínio e de
+contratos próprios em `application/ports.py`; seus casos de uso executam sem
+Discord, FastAPI, SQLite ou credenciais externas. `infra` e `presentation`
+implementam/adaptam esses contratos e não importam uma à outra.
+
+`config/settings.py` valida o ambiente. `config/bootstrap.py` é o ponto de
+composição: cria clientes, armazenamento, tarefas e servidor, injeta dependências
+e coordena o encerramento. Apenas esse ponto une as implementações concretas.
+As tarefas periódicas agendam a execução; as decisões de notificação e renovação
+permanecem nos casos de uso. As regras de cargos e acesso ficam no domínio; os
+eventos, permissões e operações sobre canais são adaptados pelos cogs Discord.
+
+Execute o processo integrado com `python -m bot` ou `discord-bot`. Os caminhos
+internos antigos foram substituídos pelos módulos das camadas acima. O banco,
+os arquivos de tokens, os assets e as variáveis de ambiente mantêm seus locais
+e formatos. Os testes em `tests/test_architecture.py` protegem as fronteiras.
+
 ## Requisitos
 
 - Python 3.12 ou superior.
@@ -71,7 +109,7 @@ desativadas, e o router Twitch só é registrado quando a Twitch está ativa.
 
 ### API FastAPI local
 
-`bot.web.app` contém a fábrica `create_web_app(...)`, e não uma instância global chamada `app`.
+`bot.presentation.http.app` contém a fábrica `create_web_app(...)`, e não uma instância global chamada `app`.
 Ela recebe o mesmo `DiscordBot` criado pelo processo principal, o `NotificationStore` compartilhado
 e registra `/webhooks/twitch` apenas quando a Twitch está ativada. Assim, não há um segundo cliente
 Discord no processo.
@@ -84,7 +122,7 @@ WEB_HOST=127.0.0.1
 WEB_PORT=8000
 ```
 
-Não use `uvicorn bot.web.app:app`: esse comando falha porque `app` é uma fábrica, não um atributo
+Não use `uvicorn bot.presentation.http.app:app`: esse comando falha porque `app` é uma fábrica, não um atributo
 exportado. O único comando oficial de execução é `python -m bot`, que compõe e inicia Discord e
 FastAPI no mesmo loop. Isso é necessário para que o webhook entregue eventos à mesma instância do bot.
 
@@ -112,8 +150,101 @@ DISCORD_MEMBER_LOG_CHANNEL_ID=123456789012345678
 ```
 
 O Morcegão enviará `📥 usuário entrou no servidor` e `📤 usuário saiu do servidor`, incluindo o ID
-do membro para facilitar auditorias. As menções não geram notificações. Deixe a variável vazia para
-desativar os logs. O bot precisa de **View Channel** e **Send Messages** nesse canal.
+do membro para facilitar auditorias. As menções não geram notificações. Se esse canal não estiver
+configurado, entradas e saídas usam o canal geral de atividade, quando disponível. O bot precisa de
+**View Channel** e **Send Messages** no canal de destino.
+
+### Diagnóstico administrativo e registros de atividade
+
+Use `/diagnostico` para receber um relatório privado com conexão e latência do Gateway,
+quantidade de membros/canais/cargos, canais configurados, permissões efetivas e hierarquia
+dos cargos gerenciados. O comando exige **Gerenciar servidor** e respeita o cargo de acesso
+configurado em `DISCORD_COMMAND_REQUIRED_ROLE_ID`, quando houver.
+
+O relatório diferencia recursos desativados, avisos e erros. Ele sugere correções sem alterar
+o servidor e avisa quando um canal de logs está visível para `@everyone`. A verificação usa
+o cache atual; o bot informa quais intents solicita, mas a ativação de intents privilegiados
+no Developer Portal deve ser conferida manualmente.
+
+Para centralizar os eventos, crie um canal de texto privado da equipe:
+
+```dotenv
+DISCORD_ACTIVITY_LOG_CHANNEL_ID=123456789012345678
+DISCORD_ACTIVITY_LOG_EVENTS=members,moderation,channels,roles
+```
+
+Categorias disponíveis:
+
+- `members`: entradas, saídas, alterações de apelido e cargos de membros.
+- `moderation`: mudanças de timeout, banimentos e remoções de banimento.
+- `channels`: criação, exclusão e alterações de configuração/permissões dos canais.
+- `roles`: criação, exclusão, permissões, hierarquia e outras alterações de cargos.
+- `messages`: edição e exclusão de mensagens, inclusive fora do cache; exclusões em lote
+  geram um único resumo com a quantidade. Esta categoria é desativada por padrão.
+
+Para incluir metadados de mensagens, acrescente `messages` à lista. O bot registra IDs e o tipo
+do evento; não copia conteúdo, anexos ou tópicos dos canais. O autor da mensagem excluída só
+é identificado se estiver no cache. Os eventos não identificam quem executou a exclusão ou a
+alteração administrativa: o bot não consulta nem reconstrói o Audit Log do Discord.
+
+Entradas e saídas usam `DISCORD_MEMBER_LOG_CHANNEL_ID` quando definido. Os demais eventos usam
+`DISCORD_ACTIVITY_LOG_CHANNEL_ID`, com fallback para o canal de membros. Não há envio para outro
+servidor, menções ativas ou registros de mensagens dos próprios canais de logs. Falhas de entrega
+são registradas no processo e não interrompem o bot. Os logs de atividade ficam nas mensagens do
+canal. A análise de crescimento mantém um histórico separado de entradas e saídas no SQLite,
+conforme descrito abaixo; as demais categorias de atividade não são arquivadas nesse histórico.
+
+Use `DISCORD_ACTIVITY_LOG_EVENTS=none` para desativar todos os registros, ou deixe ambos os IDs
+de canal vazios. Para receber eventos de membros, mantenha **Server Members Intent** habilitado.
+O bot solicita os intents de membros, moderação e mensagens necessários aos listeners; o Discord
+também pode exigir permissões específicas para entregar alguns eventos de moderação.
+
+### Crescimento, entradas e saídas por período
+
+Use `/crescimento` para receber um relatório privado com entradas, saídas, saldo líquido
+(`entradas - saídas`), comparação com a janela anterior de mesma duração e movimentação diária.
+O comando exige **Gerenciar servidor** e respeita o cargo global de acesso do bot.
+
+Exemplos:
+
+```text
+/crescimento
+/crescimento periodo:7d
+/crescimento periodo:30d
+/crescimento inicio:01/10/2026 fim:24/10/2026
+```
+
+No seletor `periodo`, escolha `24h`, `7d`, `30d` ou `90d`; o padrão é `7d`. São janelas corridas
+de tempo, portanto o primeiro e o último dia da série podem representar apenas parte de um dia.
+Para datas personalizadas, informe `inicio` e `fim` juntos e não selecione `periodo`. Os formatos
+aceitos são `AAAA-MM-DD` e `DD/MM/AAAA`, com até 366 dias por consulta. A data final inclui o dia
+selecionado; o dia atual é contado somente até o horário da consulta. Datas futuras são recusadas.
+O calendário e os agrupamentos usam o fuso fixo **UTC-03:00**, também identificado no relatório.
+
+Em `tipo`, selecione **Pessoas e bots** (padrão), **Somente pessoas** ou **Somente bots**.
+Cada entrada e cada saída é um evento: se a mesma pessoa sair e entrar novamente, cada ocorrência
+é contada. O saldo não representa uma contagem de pessoas únicas, retenção ou uma reconstrução
+do total de membros no passado. As saídas são registradas sem inferir o motivo da remoção.
+
+O resumo mostra até os 14 dias mais recentes do filtro. Se o bot possuir **Anexar arquivos**,
+ele também envia `crescimento_diario.csv` com todos os dias do intervalo, entradas, saídas,
+saldo e cobertura (`observado`, `parcial` ou `sem_historico`). Dias anteriores à coleta usam
+`--` no relatório e campos de contagem vazios no CSV, em vez de zeros. A comparação anterior
+só aparece quando essa janela estiver dentro do histórico disponível. Os registros de outros
+servidores não entram na consulta, e o CSV não contém IDs, nomes ou mensagens de membros.
+
+A coleta começa quando esta versão estiver conectada ao servidor e funciona mesmo sem canal de
+logs ou com `DISCORD_ACTIVITY_LOG_EVENTS=none`. Ela exige **Server Members Intent** habilitado no
+Developer Portal. A entrada usa o horário informado pelo Discord; a saída usa o horário em que
+o evento foi recebido, mesmo quando o membro não está no cache. O bot não importa mensagens
+antigas do canal de logs nem inventa eventos anteriores à instalação. Intervalos offline ou
+falhas de gravação podem deixar lacunas; `observado` indica que o dia está dentro da faixa de
+coleta, sem garantir disponibilidade contínua do bot.
+
+O histórico fica em `data/member-growth.sqlite3`, separado das notificações. Ele armazena apenas
+IDs de servidor/membro, tipo de evento, indicação de bot e data/hora, com consultas agregadas por
+dia. Preserve esse arquivo junto dos backups para manter as análises após reinstalar ou mover
+o bot. Não há nova dependência ou variável de ambiente obrigatória.
 
 ### Chamar moderador
 
@@ -489,6 +620,10 @@ fecha os clientes HTTP e encerra o servidor web de modo coordenado.
 ## Comandos Discord
 
 - `/comandos`: mostra os comandos disponíveis e suas formas de uso.
+- `/diagnostico`: relatório privado de conexão, canais, permissões, cargos e logs.
+  Exige **Gerenciar servidor** e não altera a configuração do servidor.
+- `/crescimento`: entradas, saídas e saldo por período, com filtro de pessoas/bots e CSV diário.
+  Exige **Gerenciar servidor**. Aceita períodos prontos ou datas inicial/final.
 - `/ping`: confirma que o bot está respondendo.
 - `/boasvindas usuario:@membro`: envia a apresentação do Morcegão por DM. Exige a permissão
   **Gerenciar servidor**.
@@ -524,8 +659,8 @@ python -m ruff format --check .
 
 - **Webhook Twitch rejeitado:** confirme que o callback é HTTPS público, contém `/webhooks/twitch` e usa o mesmo EventSub Secret configurado no painel Twitch.
 - **Sem notificação Twitch:** confirme que o bot tem acesso ao canal definido em `DISCORD_NOTIFICATION_CHANNEL_ID` e que a inscrição EventSub existe. Se as credenciais da aplicação forem recusadas, confira `TWITCH_CLIENT_ID` e `TWITCH_CLIENT_SECRET`; nenhum token Twitch precisa ser configurado manualmente.
-- **`Could not import module "bot.web.serve"`:** `serve.py` não existe de propósito. Não use Uvicorn isolado nem `--reload`; execute `python -m bot` para compor uma única instância Discord e a API.
-- **`Attribute "app" not found`:** `bot.web.app` expõe a fábrica `create_web_app`, não uma instância global. Execute `python -m bot`.
+- **`Could not import module "bot.presentation.http.serve"`:** `serve.py` não existe de propósito. Não use Uvicorn isolado nem `--reload`; execute `python -m bot` para compor uma única instância Discord e a API.
+- **`Attribute "app" not found`:** `bot.presentation.http.app` expõe a fábrica `create_web_app`, não uma instância global. Execute `python -m bot`.
 - **Token Instagram expirado ou sem permissão:** gere um token autorizado no painel Meta, confira a conta profissional e as permissões, atualize o backend seguro e reinicie. A renovação automática não recupera token já expirado ou revogado.
 - **Sem mensagem Instagram na primeira execução:** esse é o comportamento esperado com `INSTAGRAM_NOTIFY_EXISTING_LATEST=false`.
 - **Canal Discord inválido:** copie o Channel ID com Developer Mode e conceda permissão de visualizar e enviar mensagens ao bot.

@@ -9,8 +9,8 @@ from types import SimpleNamespace
 import discord
 import pytest
 
-from bot.cogs.temporary_voice import TEMPORARY_VOICE_PREFIX, TemporaryVoice
-from bot.config import Settings
+from bot.config.settings import Settings
+from bot.presentation.discord.cogs.temporary_voice import TEMPORARY_VOICE_PREFIX, TemporaryVoice
 
 
 def discord_error(error_type: type[discord.HTTPException], status: int) -> discord.HTTPException:

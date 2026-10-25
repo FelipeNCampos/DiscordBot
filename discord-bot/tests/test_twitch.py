@@ -7,8 +7,8 @@ from collections.abc import Callable
 import httpx
 import pytest
 
-from bot.config import Settings
-from bot.integrations.twitch import TwitchClient
+from bot.config.settings import Settings
+from bot.infra.integrations.twitch import TwitchClient
 
 
 def oauth_token_response(token: str = "test-access-token") -> httpx.Response:

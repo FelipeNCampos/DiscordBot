@@ -9,10 +9,11 @@ from urllib.parse import parse_qs, urlparse
 import httpx
 import pytest
 
-from bot.config import Settings
-from bot.integrations.instagram_oauth import InstagramOAuthClient, InstagramOAuthError
-from bot.models import InstagramTokenData
-from bot.web.app import create_web_app
+from bot.application.errors import InstagramOAuthError
+from bot.config.settings import Settings
+from bot.domain.models import InstagramTokenData
+from bot.infra.integrations.instagram_oauth import InstagramOAuthClient
+from bot.presentation.http.app import create_web_app
 
 
 class MemoryTokenStore:

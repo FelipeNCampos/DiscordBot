@@ -6,9 +6,9 @@ from types import SimpleNamespace
 
 import pytest
 
-import bot.cogs.music as music_module
-from bot.cogs.music import Music
-from bot.integrations.youtube_audio import YouTubeAudio
+import bot.presentation.discord.cogs.music as music_module
+from bot.domain.models import YouTubeAudio
+from bot.presentation.discord.cogs.music import Music
 
 
 class FakeResponse:

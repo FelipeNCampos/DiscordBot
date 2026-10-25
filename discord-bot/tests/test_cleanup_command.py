@@ -7,12 +7,12 @@ from types import SimpleNamespace
 import discord
 import pytest
 
-from bot.cogs.general import (
+from bot.presentation.discord.cogs.general import (
     CLEANUP_HTTP_ERROR_MESSAGE,
     CLEANUP_NOT_FOUND_MESSAGE,
     General,
 )
-from bot.errors import MISSING_MANAGE_MESSAGES_PERMISSION_MESSAGE
+from bot.presentation.discord.errors import MISSING_MANAGE_MESSAGES_PERMISSION_MESSAGE
 
 
 def discord_error(error_type: type[discord.HTTPException], status: int) -> discord.HTTPException:

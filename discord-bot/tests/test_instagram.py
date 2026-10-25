@@ -11,21 +11,17 @@ from pathlib import Path
 import httpx
 import pytest
 
-from bot.config import Settings
-from bot.integrations.instagram import (
-    InstagramAuthenticationError,
-    InstagramClient,
-    InstagramTokenExpiredError,
-    refresh_access_token,
-)
-from bot.integrations.instagram_token_store import (
+from bot.application.errors import InstagramAuthenticationError, InstagramTokenExpiredError
+from bot.config.settings import Settings
+from bot.domain.models import InstagramMedia, InstagramTokenData, InstagramTokenRefreshResult
+from bot.infra.integrations.instagram import InstagramClient, refresh_access_token
+from bot.infra.integrations.instagram_token_store import (
     AwsSecretsManagerInstagramTokenStore,
     JsonFileInstagramTokenStore,
 )
-from bot.models import InstagramMedia, InstagramTokenData, InstagramTokenRefreshResult
-from bot.storage import NotificationStore
-from bot.tasks.instagram_poller import InstagramPoller
-from bot.tasks.instagram_token_refresh import InstagramTokenRefreshTask
+from bot.infra.persistence.notifications import NotificationStore
+from bot.infra.tasks.instagram_poller import InstagramPoller
+from bot.infra.tasks.instagram_token_refresh import InstagramTokenRefreshTask
 
 
 def instagram_environment(environment: Callable[[], dict[str, str]]) -> dict[str, str]:
@@ -311,7 +307,7 @@ async def test_token_refresh_task_does_not_refresh_expired_token(
     )
     task = InstagramTokenRefreshTask(settings, client, store, now=lambda: now)  # type: ignore[arg-type]
 
-    with caplog.at_level(logging.WARNING, logger="bot.tasks.instagram_token_refresh"):
+    with caplog.at_level(logging.WARNING, logger="bot.infra.tasks.instagram_token_refresh"):
         await task.check_once()
 
     assert client.calls == 0
@@ -571,7 +567,7 @@ async def test_poller_logs_do_not_include_instagram_token(
     await store.initialize()
     poller = InstagramPoller(settings, FailingInstagramClient(), store, FakeSender())  # type: ignore[arg-type]
 
-    with caplog.at_level(logging.ERROR, logger="bot.tasks.instagram_poller"):
+    with caplog.at_level(logging.ERROR, logger="bot.infra.tasks.instagram_poller"):
         poller.start()
         await asyncio.sleep(0)
         await poller.stop()

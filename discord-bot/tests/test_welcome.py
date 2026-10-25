@@ -9,10 +9,11 @@ import discord
 import pytest
 from discord import app_commands
 
-from bot.cogs.general import General
-from bot.config import Settings
-from bot.errors import handle_app_command_error
-from bot.integrations.discord_sender import DiscordNotificationError, DiscordNotificationSender
+from bot.application.errors import DiscordNotificationError
+from bot.config.settings import Settings
+from bot.presentation.discord.cogs.general import General
+from bot.presentation.discord.errors import handle_app_command_error
+from bot.presentation.discord.notification_sender import DiscordNotificationSender
 
 
 def discord_error(error_type: type[discord.HTTPException], status: int) -> discord.HTTPException:
